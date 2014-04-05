@@ -12,8 +12,9 @@
 # Thanks to Jezzz for all his Support.
 # Updated to be a python library by Graham Forest
 
-import socket
 import json
+import re
+import socket
 
 class SGMinerError(Exception):
     def __init__(self, response):
