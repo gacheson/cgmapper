@@ -8,7 +8,7 @@ This repo is a set of helper scripts for pulling data out of the cgminer (or, pr
 * `python-rrdtool`
 * Optionally, `R` and `ggplot2`
 * `sgminer` or `cgminer` - `sgminer` is preferable as it has more precision on the MHS API endpoint
-* The API enabled for the above (add `"api-listen" : true,` `"api-allow" : "W:127.0.0.1"` `"api-port" : "4028"` to your cgminer config file)
+* The API enabled for the above (add `"api-listen" : true,` `"api-allow" : "W:127.0.0.1",` `"api-port" : "4028",` to your cgminer config file)
 
 ## Usage
 
