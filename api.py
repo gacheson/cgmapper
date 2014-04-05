@@ -28,6 +28,37 @@ class SGMiner():
         self.ip = ip
         self.port = int(port)
 
+    def _format(self, response):
+        """
+        Utility function to format returned data into more readable output
+        """
+        foo = response
+        s = ''
+        for i, j in foo.iteritems():
+            s += '---------------\n'
+            s += '%s\n' % i
+            try:
+                for jj in j:
+                    s += '---------------\n'
+                    try:
+                        for iii, jjj in jj.iteritems():
+                            s += '%s: %s\n' % (iii, jjj)
+                    except:
+                        s += '%s\n' % jj
+            except:
+                s += '%s' % j
+        return s
+
+    def _grep(self, pattern, string):
+        """
+        Utility function to search for lines matching a regular expression
+        """
+        rg = re.compile('^(' + pattern + '.*)+', re.MULTILINE)
+        m = rg.search(string)
+        if m:
+            return m.group(0)
+        return m
+
     def _linesplit(self, socket):
         """
         Utility function to handle incoming socket data from API
@@ -90,6 +121,12 @@ class SGMiner():
                     % (reply, response))
         return response[reply][0] if len(response[reply]) == 1 else response[reply]
 
+    def command_without_reply(self, command, parameter=None):
+        """
+        Handle common case of commands that return only status
+        """
+        return self.command_safe(command, parameter=parameter)
+
     def command_with_caps_reply(self, command, parameter=None):
         """ 
         Handle common case of commands that return data with capitalized name
@@ -122,3 +159,9 @@ class SGMiner():
 
     def pgacount(self):
         return self.command_with_reply(command='pgacount', reply='PGAS')
+
+    def gpumem(self, numbers=None):
+        return self._grep('Msg', self._format(self.command_without_reply('gpumem', parameter=numbers)))
+
+    def gpuengine(self, numbers=None):
+        return self._grep('Msg', self._format(self.command_without_reply('gpuengine', parameter=numbers)))
