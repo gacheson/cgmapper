@@ -85,7 +85,7 @@ class SGMiner():
             raise Exception('Unknown error connecting to API at %s:%i' % \
                     (self.ip, self.port))
         return response['STATUS'][0]['STATUS'] in ('S', 'I')
-    
+
     def command(self, command, parameter=None):
         """
         Generic API command handler
@@ -107,7 +107,7 @@ class SGMiner():
         """ 
         Handle common case of commands that should except on failure 
         """
-        response = self.command(command)
+        response = self.command(command, parameter=parameter)
         if not self._is_success(response):
             raise SGMinerError(response)
         return response
@@ -133,7 +133,7 @@ class SGMiner():
         Handle common case of commands that return data with capitalized name
         """
         return self.command_with_reply(command, reply=command.upper(), parameter=parameter)
-        
+
     def version(self):
         return self.command_with_caps_reply('version')
 
