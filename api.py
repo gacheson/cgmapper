@@ -21,7 +21,7 @@ class SGMinerError(Exception):
         self.message = response['STATUS'][0]['Msg']
         self.status = response['STATUS'][0]['STATUS']
     def __str__(self):
-        return '%s: %s' % (self.status, self.message)
+        return '{0}: {1}'.format(self.status, self.message)
 
 class SGMiner():
 
@@ -37,17 +37,17 @@ class SGMiner():
         s = ''
         for i, j in foo.iteritems():
             s += '---------------\n'
-            s += '%s\n' % i
+            s += '{0}\n'.format(i)
             try:
                 for jj in j:
                     s += '---------------\n'
                     try:
                         for iii, jjj in jj.iteritems():
-                            s += '%s: %s\n' % (iii, jjj)
+                            s += '{0}: {1}\n'.format(iii, jjj)
                     except:
-                        s += '%s\n' % jj
+                        s += '{0}\n'.format(jj)
             except:
-                s += '%s' % j
+                s += '{0}'.format(j)
         return s
 
     def _grep(self, pattern, string):
@@ -82,8 +82,7 @@ class SGMiner():
         if not 'STATUS' in response or \
            not response['STATUS'] or \
            not 'STATUS' in response['STATUS'][0]:
-            raise Exception('Unknown error connecting to API at %s:%i' % \
-                    (self.ip, self.port))
+            raise Exception('Unknown error connecting to API at {0}:{1}'.format(self.ip, self.port))
         return response['STATUS'][0]['STATUS'] in ('S', 'I')
 
     def command(self, command, parameter=None):
@@ -118,8 +117,7 @@ class SGMiner():
         """
         response = self.command_safe(command, parameter=parameter)
         if not reply in response:
-            raise Exception("Reply key '%s' not found in returned data: %s" \
-                    % (reply, response))
+            raise Exception("Reply key '{0}' not found in returned data: {1}".format(reply, response))
         return response[reply][0] if len(response[reply]) == 1 else response[reply]
 
     def command_without_reply(self, command, parameter=None):

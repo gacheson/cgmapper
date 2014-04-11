@@ -17,7 +17,7 @@ sgminer = api.SGMiner()
 threadLock = threading.Lock()
 
 class Instance:
-    def __init__(self, gpu_id, m_min, m_max, m_step, c_min, c_max, c_step, mhs_accuracy, cy_write):
+    def __init__(self, gpu_id, m_min, m_max, m_step, c_min, c_max, c_step, mhs_accuracy, cy_write, v_print):
         self.card = gpu_id
         self.mem_min = m_min
         self.mem_max = m_max
@@ -27,7 +27,8 @@ class Instance:
         self.core_step = c_step
         self.desired_accuracy_in_mhs = mhs_accuracy
         self.half_cycle_write = cy_write
-        self.csv = 'mhs-%i.csv' % gpu_id
+        self.verbose_print = v_print
+        self.csv = 'mhs-{0}.csv'.format(gpu_id)
         self.skip = []
         self.d = collections.deque()
 
@@ -36,11 +37,13 @@ class Instance:
         a = 1.0 * np.array(data)
         n = len(a)
         if n == 0:
-            print "not enough data"
+            if self.verbose_print:
+                print 'not enough data'
             return infinity
         m, se = np.mean(a), scipy.stats.sem(a)
         h = se * sp.stats.t._ppf((1+confidence)/2., n-1)
-        print "h: " + str(h)
+        if self.verbose_print:
+            print 'GPU {0}: h = {1:.14f}'.format(self.card, np.asscalar(h))
         return h
 
     def cycle_thru_clocks(self):
@@ -64,31 +67,33 @@ class Instance:
         time.sleep(10) # wait 15s for first sample, 5s else
         while len(samples) < 3 or self._mean_confidence(samples) > self.desired_accuracy_in_mhs:
             time.sleep(5)
-            sample = sgminer.devs()[self.card]['MHS 5s']
+            with threadLock:
+                sample = sgminer.devs()[self.card]['MHS 5s']
             samples.extend([sample])
         mhs = np.mean(np.array(samples))
 
         if ramp == 1:
-            self.d.append('%i,%i,%f' % (mem, core, mhs))
+            self.d.append('{0},{1},{2:.6f}'.format(mem, core, mhs))
         if ramp == -1:
-            self.d.appendleft('%i,%i,%f' % (mem, core, mhs))
+            self.d.appendleft('{0},{1},{2:.6f}'.format(mem, core, mhs))
 
-        print '%i,%i,%f' % (mem, core, mhs)
+        if self.verbose_print:
+            print 'Measuring GPU {0} at {1},{2},{3:.6f}'.format(self.card, mem, core, mhs)
         sys.stdout.flush()
 
     def set_clocks(self, mem, core, ramp):
         if not (mem, core) in self.skip:
             with threadLock:
                 if mem == self.mem_min and core == self.core_min:
-                    print sgminer.gpumem('%i,%i' % (self.card, mem))
-                    print sgminer.gpuengine('%i,%i' % (self.card, core))
+                    print sgminer.gpumem('{0},{1}'.format(self.card, mem))
+                    print sgminer.gpuengine('{0},{1}'.format(self.card, core))
                 elif core == self.core_min and ramp == 1 or core == self.core_max and ramp == -1:
-                    print sgminer.gpumem('%i,%i' % (self.card, mem))
+                    print sgminer.gpumem('{0},{1}'.format(self.card, mem))
                 else:
-                    print sgminer.gpuengine('%i,%i' % (self.card, core))
-                print 'GPU %i: adjusting clock to %i,%i' % (self.card, mem, core)
+                    print sgminer.gpuengine('{0},{1}'.format(self.card, core))
+                print 'Adjusting GPU {0} clocks to {1},{2}'.format(self.card, mem, core)
 
-                self.sample_mhs(mem, core, ramp)
+            self.sample_mhs(mem, core, ramp)
 
         return -ramp
 

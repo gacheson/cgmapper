@@ -9,9 +9,11 @@ class Thread(threading.Thread):
         self.name = name
         self.instance = instance
     def run(self):
-        print "Starting " + self.name
+        if self.instance.verbose_print:
+            print 'Starting {0}'.format(self.name)
         start_gpu(self.instance)
-        print "Exiting " + self.name
+        if self.instance.verbose_print:
+            print 'Exiting {0}'.format(self.name)
 
 def start_gpu(instance):
     instance.start()
