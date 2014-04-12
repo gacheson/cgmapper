@@ -164,3 +164,4 @@ class SGMiner():
 
     def gpuengine(self, numbers=None):
         return self._grep('Msg', self._format(self.command_without_reply('gpuengine', parameter=numbers)))
+

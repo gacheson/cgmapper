@@ -2,6 +2,7 @@
 
 from itertools import product
 import api
+import boolprint as bp
 import collections
 import csv
 import numpy as np
@@ -17,7 +18,7 @@ sgminer = api.SGMiner()
 threadLock = threading.Lock()
 
 class Instance:
-    def __init__(self, gpu_id, m_min, m_max, m_step, c_min, c_max, c_step, mhs_accuracy, cy_write, v_print):
+    def __init__(self, gpu_id, m_min, m_max, m_step, c_min, c_max, c_step, mhs_accuracy, cy_write, d_print, v_print):
         self.card = gpu_id
         self.mem_min = m_min
         self.mem_max = m_max
@@ -27,6 +28,7 @@ class Instance:
         self.core_step = c_step
         self.desired_accuracy_in_mhs = mhs_accuracy
         self.half_cycle_write = cy_write
+        self.debug_print = d_print
         self.verbose_print = v_print
         self.csv = 'mhs-{0}.csv'.format(gpu_id)
         self.skip = []
@@ -37,13 +39,11 @@ class Instance:
         a = 1.0 * np.array(data)
         n = len(a)
         if n == 0:
-            if self.verbose_print:
-                print 'not enough data'
+            bp.bprint('Not enough data', self.verbose_print)
             return infinity
         m, se = np.mean(a), scipy.stats.sem(a)
         h = se * sp.stats.t._ppf((1+confidence)/2., n-1)
-        if self.verbose_print:
-            print 'GPU {0}: h = {1:.14f}'.format(self.card, np.asscalar(h))
+        bp.bprint('GPU {0}: h = {1:.14f}'.format(self.card, np.asscalar(h)), self.verbose_print)
         return h
 
     def cycle_thru_clocks(self):
@@ -53,14 +53,14 @@ class Instance:
                 for core in xrange(self.core_min, self.core_max+1, self.core_step):
                     core_ramp = self.set_clocks(mem, core, 1)
                 if self.half_cycle_write:
-                    fstream.write_to_file(self.csv, self.d)
+                    fstream.write_to_file(self.card, self.csv, self.d, self.debug_print)
             elif core_ramp == -1:
                 for core in xrange(self.core_max, self.core_min-1, -self.core_step):
                     core_ramp = self.set_clocks(mem, core, -1)
                 if self.half_cycle_write or not self.half_cycle_write:
                     if not self.half_cycle_write:
                         self.d.rotate(-(len(d) / 2))
-                    fstream.write_to_file(self.csv, self.d)
+                    fstream.write_to_file(self.card, self.csv, self.d, self.debug_print)
 
     def sample_mhs(self, mem, core, ramp):
         samples = []
@@ -77,20 +77,21 @@ class Instance:
         if ramp == -1:
             self.d.appendleft('{0},{1},{2:.6f}'.format(mem, core, mhs))
 
-        if self.verbose_print:
-            print 'Measuring GPU {0} at {1},{2},{3:.6f}'.format(self.card, mem, core, mhs)
+        bp.bprint('Writing GPU {0} data to buffer'.format(self.card), self.debug_print)
+        bp.bprint('Measuring GPU {0} at {1},{2},{3:.6f}'.format(self.card, mem, core, mhs), self.verbose_print)
         sys.stdout.flush()
 
     def set_clocks(self, mem, core, ramp):
         if not (mem, core) in self.skip:
             with threadLock:
                 if mem == self.mem_min and core == self.core_min:
-                    print sgminer.gpumem('{0},{1}'.format(self.card, mem))
-                    print sgminer.gpuengine('{0},{1}'.format(self.card, core))
+                    bp.bprint(sgminer.gpumem('{0},{1}'.format(self.card, mem)), self.debug_print)
+                    bp.bprint(sgminer.gpuengine('{0},{1}'.format(self.card, core)), self.debug_print)
                 elif core == self.core_min and ramp == 1 or core == self.core_max and ramp == -1:
-                    print sgminer.gpumem('{0},{1}'.format(self.card, mem))
+                    bp.bprint(sgminer.gpumem('{0},{1}'.format(self.card, mem)), self.debug_print)
                 else:
-                    print sgminer.gpuengine('{0},{1}'.format(self.card, core))
+                    bp.bprint(sgminer.gpuengine('{0},{1}'.format(self.card, core)), self.debug_print)
+
                 print 'Adjusting GPU {0} clocks to {1},{2}'.format(self.card, mem, core)
 
             self.sample_mhs(mem, core, ramp)
@@ -98,5 +99,6 @@ class Instance:
         return -ramp
 
     def start(self):
-        self.skip = fstream.check_file(self.csv, self.skip)
+        self.skip = fstream.check_file(self.csv, self.skip, self.debug_print)
         self.cycle_thru_clocks()
+
