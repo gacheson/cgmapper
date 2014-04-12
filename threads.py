@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.7
 
-import boolprint as bp
+import cprint as cp
 import threading
 
 class Thread(threading.Thread):
@@ -10,9 +10,9 @@ class Thread(threading.Thread):
         self.name = name
         self.instance = instance
     def run(self):
-        bp.bprint('Starting {0}'.format(self.name), self.instance.debug_print)
+        cp.cprint_('Starting {0}'.format(self.name), self.instance.debug_print)
         start_gpu(self.instance)
-        bp.bprint('Exiting {0}'.format(self.name), self.instance.debug_print)
+        cp.cprint_('Exiting {0}'.format(self.name), self.instance.debug_print)
 
 def start_gpu(instance):
     instance.start()

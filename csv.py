@@ -1,6 +1,6 @@
 #!/usr/bin/env python2.7
 
-import boolprint as bp
+import cprint as cp
 import collections
 
 class FileStream:
@@ -13,7 +13,7 @@ class FileStream:
         except IOError:
             with open(csv, 'w') as output:
                 output.write('mem,core,mhs\n')
-                bp.bprint("Making file '{0}'".format(csv), debug_print)
+                cp.cprint_("Making file '{0}'".format(csv), debug_print)
             pass
         output.close()
         return skip
@@ -23,7 +23,7 @@ class FileStream:
             while True:
                 try:
                     output.write(d.popleft() + '\n')
-                    bp.bprint("Writing GPU {0} buffer contents to file '{1}'".format(card, csv), debug_print, 1)
+                    cp.cprint_("Writing GPU {0} buffer contents to file '{1}'".format(card, csv), debug_print, 1)
                 except IndexError:
                     break
             output.close()

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import boolprint as bp
+import cprint as cp
 import gpu
 import threads
 
@@ -39,5 +39,5 @@ for t in xrange(1, len(gpu_list)+1):
 
 for t in thread_list:
     t.join()
-bp.bprint('Exiting Main Thread', debug_print)
+cp.cprint_('Exiting Main Thread', debug_print)
 

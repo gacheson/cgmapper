@@ -2,8 +2,8 @@
 
 from itertools import product
 import api
-import boolprint as bp
 import collections
+import cprint as cp
 import csv
 import numpy as np
 import os
@@ -39,11 +39,11 @@ class Instance:
         a = 1.0 * np.array(data)
         n = len(a)
         if n == 0:
-            bp.bprint('Not enough data', self.verbose_print)
+            cp.cprint_('Not enough data', self.verbose_print)
             return infinity
         m, se = np.mean(a), scipy.stats.sem(a)
         h = se * sp.stats.t._ppf((1+confidence)/2., n-1)
-        bp.bprint('GPU {0}: h = {1:.14f}'.format(self.card, np.asscalar(h)), self.verbose_print)
+        cp.cprint_('GPU {0}: h = {1:.14f}'.format(self.card, np.asscalar(h)), self.verbose_print)
         return h
 
     def cycle_thru_clocks(self):
@@ -77,20 +77,20 @@ class Instance:
         if ramp == -1:
             self.d.appendleft('{0},{1},{2:.6f}'.format(mem, core, mhs))
 
-        bp.bprint('Writing GPU {0} data to buffer'.format(self.card), self.debug_print)
-        bp.bprint('Measuring GPU {0} at {1},{2},{3:.6f}'.format(self.card, mem, core, mhs), self.verbose_print)
+        cp.cprint_('Writing GPU {0} data to buffer'.format(self.card), self.debug_print)
+        cp.cprint_('Measuring GPU {0} at {1},{2},{3:.6f}'.format(self.card, mem, core, mhs), self.verbose_print)
         sys.stdout.flush()
 
     def set_clocks(self, mem, core, ramp):
         if not (mem, core) in self.skip:
             with threadLock:
                 if mem == self.mem_min and core == self.core_min:
-                    bp.bprint(sgminer.gpumem('{0},{1}'.format(self.card, mem)), self.debug_print)
-                    bp.bprint(sgminer.gpuengine('{0},{1}'.format(self.card, core)), self.debug_print)
+                    cp.cprint_(sgminer.gpumem('{0},{1}'.format(self.card, mem)), self.debug_print)
+                    cp.cprint_(sgminer.gpuengine('{0},{1}'.format(self.card, core)), self.debug_print)
                 elif core == self.core_min and ramp == 1 or core == self.core_max and ramp == -1:
-                    bp.bprint(sgminer.gpumem('{0},{1}'.format(self.card, mem)), self.debug_print)
+                    cp.cprint_(sgminer.gpumem('{0},{1}'.format(self.card, mem)), self.debug_print)
                 else:
-                    bp.bprint(sgminer.gpuengine('{0},{1}'.format(self.card, core)), self.debug_print)
+                    cp.cprint_(sgminer.gpuengine('{0},{1}'.format(self.card, core)), self.debug_print)
 
                 print 'Adjusting GPU {0} clocks to {1},{2}'.format(self.card, mem, core)
 
