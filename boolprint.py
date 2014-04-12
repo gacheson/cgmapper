@@ -1,10 +1,13 @@
 #!/usr/bin/env python2.7
 
-def bprint(s, p, c=None):
-    if p and (c == None or c <= 0):
-        print s
-        if not c == None or c == 0:
-            c -= 1
+"""
+Utility function that allows for conditional printing of strings
+"""
+def bprint(string, flag, count=None):
+    if flag and (count == None or count <= 0):
+        print string
+        if not count == None or count == 0:
+            count -= 1
     else:
         pass
 
