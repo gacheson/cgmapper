@@ -15,7 +15,6 @@ class FileStream:
                 output.write('mem,core,mhs\n')
                 cp.cprint_("Making file '{0}'".format(csv), debug_print)
             pass
-        output.close()
         return skip
 
     def write_to_file(self, card, csv, d, debug_print):
@@ -26,5 +25,5 @@ class FileStream:
                     cp.cprint_("Writing GPU {0} buffer contents to file '{1}'".format(card, csv), debug_print, 1)
                 except IndexError:
                     break
-            output.close()
+            output.flush()
 

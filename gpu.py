@@ -62,6 +62,21 @@ class Instance:
                         self.d.rotate(-(len(d) / 2))
                     fstream.write_to_file(self.card, self.csv, self.d, self.debug_print)
 
+    def find_set_optimal_clocks(self):
+        with open(self.csv, 'r') as output:
+            v = []
+            output.readline()
+            for line in output:
+                try:
+                    v.append(tuple(line.split(',')))
+                except:
+                    pass
+        if v:
+            max_ = max(v, key=lambda x:x[2])
+            sgminer.gpumem('{0},{1}'.format(self.card, max_[0]))
+            sgminer.gpuengine('{0},{1}'.format(self.card, max_[1]))
+            print 'Setting GPU {0} to optimal clocks {1},{2}'.format(self.card, max_[0], max_[1])
+
     def sample_mhs(self, mem, core, ramp):
         samples = []
         time.sleep(10) # wait 15s for first sample, 5s else
@@ -101,4 +116,5 @@ class Instance:
     def start(self):
         self.skip = fstream.check_file(self.csv, self.skip, self.debug_print)
         self.cycle_thru_clocks()
+        self.find_set_optimal_clocks()
 

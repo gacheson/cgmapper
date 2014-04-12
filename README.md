@@ -1,6 +1,6 @@
 # cgmapper
 
-A fork of cgminer2rrd by vitaminmoo. This repo provides an easy-to-use tool for overclocking and recording hashrate output via the cgminer (or, preferably, sgminer) API, across one or more cards, and writing it to CSV files. It's been developed on Linux, and may or may not work on other platforms.
+A fork of cgminer2rrd by vitaminmoo. This repo provides an easy-to-use tool for overclocking and recording hashrate output via the cgminer (or, preferably, sgminer) API, across one or more cards, and writing it to CSV files. Once it's done, it will automatically set the optimal clocks. It's been developed on Linux, and may or may not work on other platforms.
 
 ## Requirements
 
@@ -24,4 +24,4 @@ To generate a heatmap of your core/mem clock hashrate output for each card:
 2. Customize the top of clocks.py to specify these settings
 3. Run `./clocks.py` and wait (may take up to several days)
 4. If `./clocks.py` crashes or you have to stop it, just restart it when you can - it won't retry settings that it has already tried (limited, see clocks.py for more info)
-5. Once `./clocks.py` has finished, generate a graph with `R --no-save < clocks.R`
+5. Once `./clocks.py` has finished, generate heatmaps with `R --no-save < clocks.R`
