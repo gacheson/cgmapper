@@ -1,6 +1,6 @@
 # cgmapper
 
-A fork of cgminer2rrd by vitaminmoo. This repo provides an easy-to-use tool for overclocking and recording hashrate output via the cgminer (or, preferably, sgminer) API, across one or more cards, and writing it to CSV files. Once it's done, it will automatically set the optimal clocks. It's been developed on Linux, and may or may not work on other platforms.
+A fork of cgminer2rrd by vitaminmoo. This repo provides an easy-to-use tool for overclocking and recording hashrate output via the cgminer (or, preferably, sgminer) API, across one or more cards, and writing it to CSV files. Once it's done, it will automatically find and set the optimal clocks. It's been developed on Linux, and may or may not work on other platforms.
 
 ## Requirements
 

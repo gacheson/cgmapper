@@ -17,6 +17,17 @@ class FileStream:
             pass
         return skip
 
+    def file_to_list(self, csv):
+        v = []
+        with open(csv, 'r') as output:
+            output.readline()
+            for line in output:
+                try:
+                    v.append(tuple(line.split(',')))
+                except:
+                    pass
+        return v
+
     def write_to_file(self, card, csv, d, debug_print):
         with open(csv, 'a') as output:
             while True:
