@@ -1,36 +1,27 @@
-# cgminer2rrd
+# cgmapper
 
-This repo is a set of helper scripts for pulling data out of the cgminer (or, preferably, sgminer) API and writing it to RRD files or a CSV. It's been developed on Linux, and may or may not work on other platforms.
+A fork of cgminer2rrd by vitaminmoo. This repo provides an easy-to-use tool for sending and receiving commands and data from the cgminer (or, preferably, sgminer) API, across multiple cards, and writing it to CSV files. It's been developed on Linux, and may or may not work on other platforms.
 
 ## Requirements
 
-* `python` 2.7
-* `python-rrdtool`
-* Optionally, `R` and `ggplot2`
-* `sgminer` or `cgminer` - `sgminer` is preferable as it has more precision on the MHS API endpoint
+* `python2.7`
+* `pip` for installing `scipy`
+* `R` and `ggplot2`
+* `cgminer` or `sgminer` (`sgminer` is preferable as it has more precision on the MHS API endpoint)
 * The API enabled for the above (add `"api-listen" : true,` `"api-allow" : "W:127.0.0.1",` `"api-port" : "4028",` to your cgminer config file)
 
 ## Usage
 
-There are two primary usages of the scripts in this repo:
+Since this fork is repurposed for a single task, there is only one use for it:
 
-1. Recording long-term performance and tuning data to RRD files for later graphing
-2. Actively fiddling with overclock settings while writing data to a CSV for later processing with `R`
-
-## RRD Graphing
-
-This is the, ironically, the less compelling usage of `cgminer2rrd` at the moment. It basically dumps information from the `cgminer` API to RRD files, ready for later graphing.
-
-To run, use `./poll.py`, which will output very little, but poll the `cgminer` API every 5 seconds
-
-To view data, use `./graph.py`, which will render the more useful generated RRD files to graphs, ready for viewing.
+1. Actively fiddling with overclock settings while writing data to a CSV for later processing with `R`
 
 ## Overclock Tuning
 
-To generate a heatmap of your core/mem clock hashrate output:
+To generate a heatmap of your core/mem clock hashrate output for each card:
 
-1. Be aware of your card's stable range of core and memory clock settings
+1. Be aware of your cards' stable range of core and memory clock settings
 2. Customize the top of clocks.py to specify these settings
-3. Run `./clocks.py` and wait several days
-4. If `./clocks.py` crashes or you have to stop it, just restart it when you can - it won't retry settings that it has already tried
+3. Run `./clocks.py` and wait (may take up to several days)
+4. If `./clocks.py` crashes or you have to stop it, just restart it when you can - it won't retry settings that it has already tried (limited, see `.clocks.py` for more info)
 5. Once `./clocks.py` has finished, generate a graph with `R --no-save < clocks.R`
