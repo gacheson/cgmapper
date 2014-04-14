@@ -1,6 +1,6 @@
 # cgmapper
 
-A fork of cgminer2rrd by vitaminmoo. This repo provides an easy-to-use tool for overclocking and recording hashrate output via the cgminer API, for one or more cards, and writing it to file for later use. Once it's done, it will have found and set the optimal clock speeds for each card. There is also the option of generating heatmaps to help visualize the hashrate output. It's been developed on Linux to be cross-platform, however it may or may not work on other platforms (currently untested).
+A fork of cgminer2rrd by vitaminmoo. cgmapper is an easy-to-use tool for overclocking and recording hashrate output via the cgminer API, for one or more cards, and writing it to file for later use. Once it's done, cgmapper will have found and set the optimal clock speeds for each card. There is also the option of generating heatmaps to help visualize the hashrate output. It's been developed on Linux to be cross-platform, however it may or may not work on other platforms (currently untested).
 
 ## Requirements
 
@@ -13,13 +13,23 @@ A fork of cgminer2rrd by vitaminmoo. This repo provides an easy-to-use tool for 
 
 ## Usage
 
-cgmapper does only one thing (at which it's pretty good at):
+cgmapper does only **one thing** *(at which it's pretty good at)*:
 
->Finding and setting the optimal clock speeds, for one or more cards, while writing data to file for later use with `R`
+1. Finding and setting the optimal clock speeds, for one or more cards, while writing data to file for later use with `R`
 
-If you want to specify more than one card, in clocks.py:
+cgmapper's GPU identifiers are linked to cgminer. If the card you want to use is `GPU 1` in cgminer, it will be `'1'` in cgmapper.
+
+---
+
+If you want to specify just one card to use, in clocks.py:
+
+`card = '1'`
+
+If you want to specify more than one card:
 
 `card = '0,1,2,..'`
+
+---
 
 Each card can have its own core clock range, memory clock range, and core/memory step values or they can have a single value for each that is applied to all:
 
@@ -27,7 +37,7 @@ Each card can have its own core clock range, memory clock range, and core/memory
 
 `core_min = '900'`
 
-cgmapper's GPU identifiers are linked to cgminer. If the card you want to use is `GPU 1` in cgminer, it will be `card = '1'` in cgmapper.
+---
 
 Additionally, there are more options that you can set which are briefly commented on in clocks.py *`# comments are preceded by a hash mark`*.
 
