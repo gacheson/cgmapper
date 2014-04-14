@@ -54,7 +54,7 @@ class Instance:
                     core_ramp = self.set_clocks(mem, core, -1)
 
     def find_set_optimal_clocks(self):
-        values = self.fstream.file_to_list(self.filename)
+        values = self.fstream.file_to_list(self.filename, self.debug_print)
         if values:
             max_ = max(values, key=lambda x:x[2])
             util.cprint_(cgminer.gpumem('{0},{1}'.format(self.card, max_[0])), self.debug_print)
