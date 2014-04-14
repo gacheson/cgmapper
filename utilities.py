@@ -16,7 +16,7 @@ class FileStream:
             with open(filename, 'wb') as output:
                 writer = csv.writer(output, delimiter=',', quoting=csv.QUOTE_NONE)
                 writer.writerow(["mem","core","mhs"])
-                cprint_("Making file '{0}'".format(csv), debug_print)
+                cprint_("Making file '{0}'".format(filename), debug_print)
             pass
         return skip
 
@@ -45,10 +45,11 @@ class FileStream:
             for row in data:
                 writer.writerow(row)
 
-    def write_to_file(self, mem, core, mhs, filename, debug_print):
+    def write_to_file(self, mem, core, mhs, card, filename, debug_print):
         with open(filename, 'ab') as output:
             writer = csv.writer(output, delimiter=',', quoting=csv.QUOTE_NONE)
             writer.writerow([mem, core, "{0:.6f}".format(mhs)])
+            cprint_("Writing GPU {0} data to file '{1}'".format(card, filename), debug_print, 1)
 
 """
 Utility function to allow for conditional printing of a string

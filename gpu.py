@@ -28,7 +28,7 @@ class Instance:
         self.desired_accuracy_in_mhs = mhs_accuracy
         self.debug_print = d_print
         self.verbose_print = v_print
-        self.csv = 'mhs-{0}.csv'.format(gpu_id)
+        self.filename = 'mhs-{0}.csv'.format(gpu_id)
         self.skip = []
 
     def _mean_confidence(self, data, confidence=0.95):
@@ -54,7 +54,7 @@ class Instance:
                     core_ramp = self.set_clocks(mem, core, -1)
 
     def find_set_optimal_clocks(self):
-        values = fstream.file_to_list(self.csv)
+        values = fstream.file_to_list(self.filename)
         if values:
             max_ = max(values, key=lambda x:x[2])
             util.cprint_(cgminer.gpumem('{0},{1}'.format(self.card, max_[0])), self.debug_print)
@@ -71,7 +71,6 @@ class Instance:
             samples.extend([sample])
         mhs = np.mean(np.array(samples))
 
-        util.cprint_('Writing GPU {0} data to buffer'.format(self.card), self.debug_print)
         util.cprint_('Measuring GPU {0} at {1},{2},{3:.6f}'.format(self.card, mem, core, mhs), self.verbose_print)
         sys.stdout.flush()
         
@@ -90,13 +89,13 @@ class Instance:
 
                 print 'Adjusting GPU {0} clocks to {1},{2}'.format(self.card, mem, core)
 
-            fstream.write_to_file(mem, core, self.sample_mhs(mem, core, ramp), self.csv, self.debug_print)
-            fstream.sort_in_file(self.csv)
+            fstream.write_to_file(mem, core, self.sample_mhs(mem, core, ramp), self.card, self.filename, self.debug_print)
+            fstream.sort_in_file(self.filename)
 
         return -ramp
 
     def start(self):
-        self.skip = fstream.check_file(self.csv, self.skip, self.debug_print)
+        self.skip = fstream.check_file(self.filename, self.skip, self.debug_print)
         self.cycle_thru_clocks()
         self.find_set_optimal_clocks()
 
