@@ -2,6 +2,7 @@
 
 # Copyright 2013 Setkeh Mkfr
 # Copyright 2013 Graham Forest <vitaminmoo@wza.us>
+# Copyright 2014 Geoffrey Acheson <https://github.com/gacheson>
 #
 # This program is free software; you can redistribute it and/or modify it under
 # the terms of the GNU General Public License as published by the Free Software
@@ -11,19 +12,20 @@
 # Original example written by: setkeh <https://github.com/setkeh>
 # Thanks to Jezzz for all his Support.
 # Updated to be a python library by Graham Forest
+# Adapted to be an overclocking tool by Geoffrey Acheson
 
 import json
 import re
 import socket
 
-class SGMinerError(Exception):
+class CGMinerError(Exception):
     def __init__(self, response):
         self.message = response['STATUS'][0]['Msg']
         self.status = response['STATUS'][0]['STATUS']
     def __str__(self):
         return '{0}: {1}'.format(self.status, self.message)
 
-class SGMiner():
+class CGMiner():
 
     def __init__(self, ip='127.0.0.1', port=4028):
         self.ip = ip
@@ -108,7 +110,7 @@ class SGMiner():
         """
         response = self.command(command, parameter=parameter)
         if not self._is_success(response):
-            raise SGMinerError(response)
+            raise CGMinerError(response)
         return response
 
     def command_with_reply(self, command, reply, parameter=None):
@@ -132,32 +134,32 @@ class SGMiner():
         """
         return self.command_with_reply(command, reply=command.upper(), parameter=parameter)
 
-    def version(self):
-        return self.command_with_caps_reply('version')
+#    def version(self):
+#        return self.command_with_caps_reply('version')
 
-    def config(self):
-        return self.command_with_caps_reply('config')
+#    def config(self):
+#        return self.command_with_caps_reply('config')
     
-    def summary(self):
-        return self.command_with_caps_reply('summary')
+#    def summary(self):
+#        return self.command_with_caps_reply('summary')
 
-    def pools(self):
-        return self.command_with_caps_reply('pools')
+#    def pools(self):
+#        return self.command_with_caps_reply('pools')
 
     def devs(self):
         return self.command_with_caps_reply('devs')
 
-    def gpu(self, number=None):
-        return self.command_with_caps_reply('gpu', parameter=number)
+#    def gpu(self, number=None):
+#        return self.command_with_caps_reply('gpu', parameter=number)
 
-    def pga(self, number=None):
-        return self.command_with_caps_reply('pga', parameter=number)
+#    def pga(self, number=None):
+#        return self.command_with_caps_reply('pga', parameter=number)
 
     def gpucount(self):
         return self.command_with_reply(command='gpucount', reply='GPUS')
 
-    def pgacount(self):
-        return self.command_with_reply(command='pgacount', reply='PGAS')
+#    def pgacount(self):
+#        return self.command_with_reply(command='pgacount', reply='PGAS')
 
     def gpumem(self, numbers=None):
         return self._grep('Msg', self._format(self.command_without_reply('gpumem', parameter=numbers)))

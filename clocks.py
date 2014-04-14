@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 
-import cprint as cp
+import utilities as util
 import gpu
 import threads
 
 # Customize these
 card = '1'       # Card number, 0 is the first
 mem_min = '1400' # The memory clock to start at
-mem_max = '1500' # The memory clock to end at
+mem_max = '1401' # The memory clock to end at
 mem_step = '1'   # The interval to try memory clocks at (1 = all, 2 = every other, etc.)
 core_min = '975' # The core clock to start at
-core_max = '1050' # The core clock to end at
+core_max = '976' # The core clock to end at
 core_step = '1'  # The interval to try core clocks
 desired_accuracy_in_mhs = 0.002 # The desired accuracy of samples in megahashes per second. .002 or .001 is recommended here
 half_cycle_write = True # The desired frequency of writes made to file. Half cycle (True) writes at core min and at core max. Full cycle (False) only writes at core min
@@ -39,5 +39,5 @@ for t in xrange(1, len(gpu_list)+1):
 
 for t in thread_list:
     t.join()
-cp.cprint_('Exiting Main Thread', debug_print)
+util.cprint_('Exiting Main Thread', debug_print)
 
