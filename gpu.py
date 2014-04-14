@@ -17,7 +17,7 @@ cgminer = api.CGMiner()
 threadLock = threading.Lock()
 
 class Instance:
-    def __init__(self, gpu_id, m_min, m_max, m_step, c_min, c_max, c_step, mhs_accuracy, cy_write, d_print, v_print):
+    def __init__(self, gpu_id, m_min, m_max, m_step, c_min, c_max, c_step, mhs_accuracy, d_print, v_print):
         self.card = gpu_id
         self.mem_min = m_min
         self.mem_max = m_max
@@ -26,12 +26,10 @@ class Instance:
         self.core_max = c_max
         self.core_step = c_step
         self.desired_accuracy_in_mhs = mhs_accuracy
-        self.half_cycle_write = cy_write
         self.debug_print = d_print
         self.verbose_print = v_print
         self.csv = 'mhs-{0}.csv'.format(gpu_id)
         self.skip = []
-#        self.d = collections.deque()
 
     def _mean_confidence(self, data, confidence=0.95):
         infinity = 1.0e24
@@ -51,15 +49,9 @@ class Instance:
             if core_ramp == 1:
                 for core in xrange(self.core_min, self.core_max+1, self.core_step):
                     core_ramp = self.set_clocks(mem, core, 1)
-#                if self.half_cycle_write:
-#                    fstream.write_to_file(self.card, self.csv, self.d, self.debug_print)
             elif core_ramp == -1:
                 for core in xrange(self.core_max, self.core_min-1, -self.core_step):
                     core_ramp = self.set_clocks(mem, core, -1)
- #               if self.half_cycle_write or not self.half_cycle_write:
-#                    if not self.half_cycle_write:
-#                        self.d.rotate(-(len(d) / 2))
-#                    fstream.write_to_file(self.card, self.csv, self.d, self.debug_print)
 
     def find_set_optimal_clocks(self):
         values = fstream.file_to_list(self.csv)
@@ -78,11 +70,6 @@ class Instance:
                 sample = cgminer.devs()[self.card]['MHS 5s']
             samples.extend([sample])
         mhs = np.mean(np.array(samples))
-
-#        if ramp == 1:
-#            self.d.append('{0},{1},{2:.6f}'.format(mem, core, mhs))
-#        if ramp == -1:
-#            self.d.appendleft('{0},{1},{2:.6f}'.format(mem, core, mhs))
 
         util.cprint_('Writing GPU {0} data to buffer'.format(self.card), self.debug_print)
         util.cprint_('Measuring GPU {0} at {1},{2},{3:.6f}'.format(self.card, mem, core, mhs), self.verbose_print)

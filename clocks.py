@@ -13,7 +13,6 @@ core_min = '975' # The core clock to start at
 core_max = '976' # The core clock to end at
 core_step = '1'  # The interval to try core clocks
 desired_accuracy_in_mhs = 0.002 # The desired accuracy of samples in megahashes per second. .002 or .001 is recommended here
-half_cycle_write = True # The desired frequency of writes made to file. Half cycle (True) writes at core min and at core max. Full cycle (False) only writes at core min
 debug_print = False # The desired debug print setting. Debug (True) will print out execution statements for each thread
 verbose_print = False # The desired verbose print setting. Verbose (True) will print out additional data about each gpu thread
 
