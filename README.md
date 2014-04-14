@@ -21,13 +21,13 @@ If you want to specify more than one card, in clocks.py:
 
 `card = '0,1,2,..'`
 
-Each card can have its own core clock range, memory clock range, and core/memory step values ~~or they can have a single value for each that is applied to all~~:
+Each card can have its own core clock range, memory clock range, and core/memory step values or they can have a single value for each that is applied to all:
 
 `core_min = '900,1000,1100,..'`
 
-~~`core_min = '900'`~~
+`core_min = '900'`
 
-cgmapper's gpu identifiers are linked to cgminer. If the card you want to use is `GPU 1` in cgminer, it will be `card = '1'` in cgmapper.
+cgmapper's GPU identifiers are linked to cgminer. If the card you want to use is `GPU 1` in cgminer, it will be `card = '1'` in cgmapper.
 
 Additionally, there are more options that you can set which are briefly commented on in clocks.py *`# comments are preceded by a hash mark`*.
 

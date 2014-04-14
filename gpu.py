@@ -12,7 +12,6 @@ import threading
 import time
 import utilities as util
 
-fstream = util.FileStream()
 cgminer = api.CGMiner()
 threadLock = threading.Lock()
 
@@ -29,6 +28,7 @@ class Instance:
         self.debug_print = d_print
         self.verbose_print = v_print
         self.filename = 'mhs-{0}.csv'.format(gpu_id)
+        self.fstream = util.FileStream()
         self.skip = []
 
     def _mean_confidence(self, data, confidence=0.95):
@@ -54,7 +54,7 @@ class Instance:
                     core_ramp = self.set_clocks(mem, core, -1)
 
     def find_set_optimal_clocks(self):
-        values = fstream.file_to_list(self.filename)
+        values = self.fstream.file_to_list(self.filename)
         if values:
             max_ = max(values, key=lambda x:x[2])
             util.cprint_(cgminer.gpumem('{0},{1}'.format(self.card, max_[0])), self.debug_print)
@@ -89,13 +89,13 @@ class Instance:
 
                 print 'Adjusting GPU {0} clocks to {1},{2}'.format(self.card, mem, core)
 
-            fstream.write_to_file(mem, core, self.sample_mhs(mem, core, ramp), self.card, self.filename, self.debug_print)
-            fstream.sort_in_file(self.filename)
+            self.fstream.write_to_file(mem, core, self.sample_mhs(mem, core, ramp), self.card, self.filename, self.debug_print)
+            self.fstream.sort_in_file(self.filename, self.debug_print)
 
         return -ramp
 
     def start(self):
-        self.skip = fstream.check_file(self.filename, self.skip, self.debug_print)
+        self.skip = self.fstream.check_file(self.filename, self.skip, self.debug_print)
         self.cycle_thru_clocks()
         self.find_set_optimal_clocks()
 
