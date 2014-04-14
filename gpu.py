@@ -90,7 +90,7 @@ class Instance:
 
                 print 'Adjusting GPU {0} clocks to {1},{2}'.format(self.card, mem, core)
 
-            fstream.write_to_file(mem, core, self.sample_mhs(mem, core, ramp), self.card, self.csv, self.debug_print)
+            fstream.write_to_file(mem, core, self.sample_mhs(mem, core, ramp), self.csv, self.debug_print)
             fstream.sort_in_file(self.csv)
 
         return -ramp

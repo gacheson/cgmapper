@@ -45,7 +45,7 @@ class FileStream:
             for row in data:
                 writer.writerow(row)
 
-    def write_to_file(self, mem, core, mhs, card, filename, debug_print):
+    def write_to_file(self, mem, core, mhs, filename, debug_print):
         with open(filename, 'ab') as output:
             writer = csv.writer(output, delimiter=',', quoting=csv.QUOTE_NONE)
             writer.writerow([mem, core, "{0:.6f}".format(mhs)])

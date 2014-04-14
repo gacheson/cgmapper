@@ -13,7 +13,7 @@ A fork of cgminer2rrd by vitaminmoo. This repo provides an easy-to-use tool for 
 
 ## Usage
 
-cgmapper only does one thing (at which it's pretty good at):
+cgmapper does only one thing (at which it's pretty good at):
 
 >Finding and setting the optimal clock speeds, for one or more cards, while writing data to file for later use with `R`
 

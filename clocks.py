@@ -29,7 +29,7 @@ gpu_list = []
 thread_list = []
 
 for g in xrange(0, len(gpu_id)):
-    gpu_list.append(gpu.Instance(gpu_id[g], m_min[g], m_max[g], m_step[g], c_min[g], c_max[g], c_step[g], desired_accuracy_in_mhs, half_cycle_write, debug_print, verbose_print))
+    gpu_list.append(gpu.Instance(gpu_id[g], m_min[g], m_max[g], m_step[g], c_min[g], c_max[g], c_step[g], desired_accuracy_in_mhs, debug_print, verbose_print))
 
 for t in xrange(1, len(gpu_list)+1):
     t = threads.Thread(t, 'Thread-{0}'.format(t), gpu_list[t-1])
